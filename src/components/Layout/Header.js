@@ -13,7 +13,11 @@ const Header = (props) => {
 				<HeaderCartButton handleOnClick={onShowCart} />
 			</header>
 			<div className={classes['main-image']}>
-				<img alt="A table with a bunch of delicious food" src={mealsImage} />
+				<img
+					alt="A table with a bunch of delicious food"
+					src={mealsImage}
+					loading="lazy"
+				/>
 			</div>
 		</>
 	);

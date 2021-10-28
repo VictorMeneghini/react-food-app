@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useRef, useState, useLayoutEffect } from 'react';
 
 import classes from './Cart.module.css';
 import Modal from '../UI/Modal';
@@ -6,10 +6,16 @@ import CartContext from '../../store/cart-context';
 import CartItem from './CartItem';
 
 const Cart = (props) => {
+	const cartItemRef = useRef(null);
+	const [heightCart, setHeigthCart] = useState(0);
 	const { onHideCart } = props;
 	const cartCtx = useContext(CartContext);
 	const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
 	const hasItems = cartCtx.items.length > 0;
+
+	useLayoutEffect(() => {
+		setHeigthCart(cartItemRef.current.clientHeight);
+	});
 
 	const CartItemRemoveHandler = (id) => {
 		console.log(id);
@@ -20,7 +26,11 @@ const Cart = (props) => {
 	};
 
 	const cartItems = (
-		<ul classes={classes['cart-items']}>
+		<ul
+			className={`${classes['cart-items']} ${
+				heightCart > 300 ? classes['cart-items-scroll'] : ''
+			}`}
+		>
 			{cartCtx.items.map((item) => (
 				<CartItem
 					key={item.id}
@@ -35,7 +45,8 @@ const Cart = (props) => {
 	);
 	return (
 		<Modal onClose={onHideCart}>
-			{cartItems}
+			<div ref={cartItemRef}>{cartItems}</div>
+
 			<div className={classes.total}>
 				<span>Total Amount</span>
 				<span>{totalAmount}</span>
